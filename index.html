@@ -2,11 +2,10 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Caça ao Tesouro</title>
+    <title>Terminal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
-        /* RESET E CONTROLE DE TAMANHO */
         * {
             box-sizing: border-box;
         }
@@ -17,111 +16,93 @@
             width: 100%;
             height: 100%;
             background: #0b0b0b;
-            overflow: hidden;
+            color: #00ff88;
             font-family: "Courier New", monospace;
+            font-size: 14px;
+        }
+
+        body {
+            padding: 20px;
+        }
+
+        .terminal {
+            max-width: 800px;
+        }
+
+        .linha {
+            margin-bottom: 8px;
+            white-space: pre-wrap;
+        }
+
+        .prompt {
             color: #00ff88;
         }
 
-        /* CENTRALIZAÇÃO POR GRID */
-        body {
-            display: grid;
-            place-items: center;
+        .input-linha {
+            display: flex;
+            align-items: center;
         }
 
-        /* CARTÃO PRINCIPAL */
-        .card {
-            display: grid;
-            grid-template-rows: auto auto auto auto;
-            gap: 14px;
-            background: #111;
-            border: 1px solid #00ff88;
-            padding: 22px;
-            width: 100%;
-            max-width: 420px;
-            border-radius: 6px;
-            box-shadow: 0 0 20px rgba(0,255,136,0.15);
-            text-align: center;
-        }
-
-        h2 {
-            font-size: 15px;
-            font-weight: normal;
-            line-height: 1.4;
-            margin: 0;
+        .input-linha span {
+            margin-right: 6px;
         }
 
         input {
-            width: 100%;
-            padding: 10px;
-            background: #000;
-            border: 1px solid #00ff88;
+            background: transparent;
+            border: none;
+            outline: none;
             color: #00ff88;
             font-family: inherit;
-            font-size: 14px;
+            font-size: inherit;
+            flex: 1;
         }
 
         input::placeholder {
             color: #007744;
         }
 
-        input:focus {
-            outline: none;
-            box-shadow: 0 0 6px rgba(0,255,136,0.6);
-        }
-
-        button {
-            padding: 10px;
-            background: transparent;
-            border: 1px solid #00ff88;
-            color: #00ff88;
-            font-family: inherit;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #00ff88;
-            color: #000;
-        }
-
         .mensagem {
-            font-size: 13px;
-            min-height: 18px;
+            margin-top: 8px;
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2 id="pergunta"></h2>
+<div class="terminal" id="terminal">
+    <div class="linha">Microsoft Windows [Version 10.0.XXXX]</div>
+    <div class="linha">(c) Microsoft Corporation. Todos os direitos reservados.</div>
+    <div class="linha">&nbsp;</div>
 
-    <input type="text" id="respostaInput" placeholder="digite a resposta">
+    <div class="linha" id="pergunta"></div>
 
-    <button onclick="verificarResposta()">enviar</button>
+    <div class="input-linha">
+        <span class="prompt">C:\></span>
+        <input type="text" id="respostaInput" autofocus>
+    </div>
 
-    <div class="mensagem" id="mensagem"></div>
+    <div class="linha mensagem" id="mensagem"></div>
 </div>
 
 <script>
     const etapas = [
         {
-            pergunta: "Antes de ensinar, eu tentei compreender. Onde minhas perguntas ainda dormem em papel?",
+            pergunta: "Antes de ensinar, eu tentei compreender.\nOnde minhas perguntas ainda dormem em papel?",
             resposta: "origem"
         },
         {
-            pergunta: "Toda origem aponta para o alto. Onde o pensamento encontra o céu antes de cair em palavras?",
+            pergunta: "Toda origem aponta para o alto.\nOnde o pensamento encontra o céu antes de cair em palavras?",
             resposta: "vertigem"
         },
         {
-            pergunta: "Nem tudo que cresce foi planejado. Algumas ideias nascem onde a raiz encontra o mundo.",
+            pergunta: "Nem tudo que cresce foi planejado.\nAlgumas ideias nascem onde a raiz encontra o mundo.",
             resposta: "tempo"
         },
         {
-            pergunta: "Depois de olhar para cima e para fora, o pensamento retorna para onde o corpo descansa.",
+            pergunta: "Depois de olhar para cima e para fora,\no pensamento retorna para onde o corpo descansa.",
             resposta: "silencio"
         },
         {
-            pergunta: "Nem toda resposta cabe numa palavra. Onde o que importa foi guardado para você?",
+            pergunta: "Nem toda resposta cabe numa palavra.\nOnde o que importa foi guardado para você?",
             resposta: "encontro"
         }
     ];
@@ -130,29 +111,37 @@
 
     function mostrarEtapa() {
         document.getElementById("pergunta").innerText = etapas[etapaAtual].pergunta;
-        document.getElementById("respostaInput").value = "";
         document.getElementById("mensagem").innerText = "";
+        document.getElementById("respostaInput").value = "";
+        document.getElementById("respostaInput").focus();
     }
 
+    document.getElementById("respostaInput").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") {
+            verificarResposta();
+        }
+    });
+
     function verificarResposta() {
-        const respostaUsuario = document.getElementById("respostaInput").value.toLowerCase().trim();
-        const respostaCorreta = etapas[etapaAtual].resposta.toLowerCase();
+        const input = document.getElementById("respostaInput");
+        const respostaUsuario = input.value.toLowerCase().trim();
+        const respostaCorreta = etapas[etapaAtual].resposta;
         const mensagem = document.getElementById("mensagem");
 
         if (respostaUsuario === respostaCorreta) {
             etapaAtual++;
 
             if (etapaAtual < etapas.length) {
-                mensagem.innerText = "acesso concedido...";
-                setTimeout(mostrarEtapa, 1000);
+                mensagem.innerText = "Acesso concedido.";
+                setTimeout(mostrarEtapa, 800);
             } else {
-                mensagem.innerText = "processo concluído. o presente aguarda.";
-                document.getElementById("pergunta").innerText = "fim do percurso.";
-                document.getElementById("respostaInput").style.display = "none";
-                document.querySelector("button").style.display = "none";
+                mensagem.innerText = "Processo concluído. O presente aguarda.";
+                input.style.display = "none";
+                document.querySelector(".prompt").innerText = "";
             }
         } else {
-            mensagem.innerText = "acesso negado. tente novamente.";
+            mensagem.innerText = "Acesso negado.";
+            input.value = "";
         }
     }
 
