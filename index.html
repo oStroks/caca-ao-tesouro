@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -7,8 +7,9 @@
 
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f0f0f0;
+            font-family: "Courier New", monospace;
+            background: #0b0b0b; /* preto fosco */
+            color: #00ff88;      /* verde cibernético */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -17,23 +18,57 @@
         }
 
         .card {
-            background: gray;
+            background: #111;
+            border: 1px solid #00ff88;
             padding: 20px;
-            border-radius: 8px;
-            max-width: 400px;
+            border-radius: 6px;
+            max-width: 420px;
             width: 100%;
             text-align: center;
+            box-shadow: 0 0 20px rgba(0,255,136,0.15);
         }
 
-        input, button {
+        h2 {
+            font-size: 16px; /* fonte menor */
+            font-weight: normal;
+            margin-bottom: 15px;
+        }
+
+        input {
             width: 100%;
             padding: 10px;
             margin-top: 10px;
+            background: #000;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+        }
+
+        input::placeholder {
+            color: #007744;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 12px;
+            background: transparent;
+            border: 1px solid #00ff88;
+            color: #00ff88;
+            font-family: "Courier New", monospace;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #00ff88;
+            color: #000;
         }
 
         .mensagem {
             margin-top: 15px;
-            font-weight: bold;
+            font-size: 13px;
         }
     </style>
 </head>
@@ -42,73 +77,4 @@
 <div class="card">
     <h2 id="pergunta"></h2>
 
-    <input type="text" id="respostaInput" placeholder="Digite sua resposta">
-
-    <button onclick="verificarResposta()">Responder</button>
-
-    <div class="mensagem" id="mensagem"></div>
-</div>
-
-<script>
-    // 🔑 TODAS AS ETAPAS ESTÃO AQUI
-    const etapas = [
-        {
-            pergunta: "Antes de ensinar, eu tentei compreender. Onde minhas perguntas ainda dormem em papel?",
-            resposta: "origem"
-        },
-        {
-            pergunta: "Toda origem aponta para o alto. Onde o pensamento encontra o céu antes de cair em palavras?",
-            resposta: "vertigem"
-        },
-        {
-            pergunta: "Nem tudo que cresce foi planejado. Algumas ideias nascem onde a raiz encontra o mundo.",
-            resposta: "tempo"
-        },
-        {
-            pergunta: "Depois de olhar para cima e para fora, o pensamento retorna para onde o corpo descansa.",
-            resposta: "silêncio"
-        },
-        {
-            pergunta: "Nem toda resposta cabe numa palavra. Onde o que importa foi guardado para você?",
-            resposta: "encontro"
-        }
-    ];
-
-    let etapaAtual = 0;
-
-    function mostrarEtapa() {
-        document.getElementById("pergunta").innerText = etapas[etapaAtual].pergunta;
-        document.getElementById("respostaInput").value = "";
-        document.getElementById("mensagem").innerText = "";
-    }
-
-    function verificarResposta() {
-        const respostaUsuario = document.getElementById("respostaInput").value.toLowerCase();
-        const respostaCorreta = etapas[etapaAtual].resposta.toLowerCase();
-        const mensagem = document.getElementById("mensagem");
-
-        if (respostaUsuario === respostaCorreta) {
-            etapaAtual++;
-
-            if (etapaAtual < etapas.length) {
-                mensagem.style.color = "green";
-                mensagem.innerText = "✔ Correto. O caminho continua...";
-                setTimeout(mostrarEtapa, 1200);
-            } else {
-                mensagem.style.color = "green";
-                mensagem.innerText = "🎁 Você chegou ao final. O presente te espera.";
-                document.getElementById("pergunta").innerText = "Parabéns.";
-                document.getElementById("respostaInput").style.display = "none";
-            }
-        } else {
-            mensagem.style.color = "red";
-            mensagem.innerText = "✖ Ainda não. Releia com calma.";
-        }
-    }
-
-    // Inicia a primeira etapa
-    mostrarEtapa();
-</script>
-
-</body>
-</html>
+    <input type="text" id="respostaInput" placeholder="di
