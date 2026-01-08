@@ -77,4 +77,71 @@
 <div class="card">
     <h2 id="pergunta"></h2>
 
-    <input type="text" id="respostaInput" placeholder="di
+    <input type="text" id="respostaInput" placeholder="digite a resposta">
+
+    <button onclick="verificarResposta()">enviar</button>
+
+    <div class="mensagem" id="mensagem"></div>
+</div>
+
+<script>
+    const etapas = [
+        {
+            pergunta: "Antes de ensinar, eu tentei compreender. Onde minhas perguntas ainda dormem em papel?",
+            resposta: "origem"
+        },
+        {
+            pergunta: "Toda origem aponta para o alto. Onde o pensamento encontra o céu antes de cair em palavras?",
+            resposta: "vertigem"
+        },
+        {
+            pergunta: "Nem tudo que cresce foi planejado. Algumas ideias nascem onde a raiz encontra o mundo.",
+            resposta: "tempo"
+        },
+        {
+            pergunta: "Depois de olhar para cima e para fora, o pensamento retorna para onde o corpo descansa.",
+            resposta: "silencio"
+        },
+        {
+            pergunta: "Nem toda resposta cabe numa palavra. Onde o que importa foi guardado para você?",
+            resposta: "encontro"
+        }
+    ];
+
+    let etapaAtual = 0;
+
+    function mostrarEtapa() {
+        document.getElementById("pergunta").innerText = etapas[etapaAtual].pergunta;
+        document.getElementById("respostaInput").value = "";
+        document.getElementById("mensagem").innerText = "";
+    }
+
+    function verificarResposta() {
+        const respostaUsuario = document.getElementById("respostaInput").value.toLowerCase().trim();
+        const respostaCorreta = etapas[etapaAtual].resposta.toLowerCase();
+        const mensagem = document.getElementById("mensagem");
+
+        if (respostaUsuario === respostaCorreta) {
+            etapaAtual++;
+
+            if (etapaAtual < etapas.length) {
+                mensagem.style.color = "#00ff88";
+                mensagem.innerText = "acesso concedido...";
+                setTimeout(mostrarEtapa, 1200);
+            } else {
+                mensagem.style.color = "#00ff88";
+                mensagem.innerText = "processo concluído. o presente aguarda.";
+                document.getElementById("pergunta").innerText = "fim do percurso.";
+                document.getElementById("respostaInput").style.display = "none";
+            }
+        } else {
+            mensagem.style.color = "#ff4444";
+            mensagem.innerText = "acesso negado. tente novamente.";
+        }
+    }
+
+    mostrarEtapa();
+</script>
+
+</body>
+</html>
