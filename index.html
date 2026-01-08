@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Caça ao Tesouro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 10px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .mensagem {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 id="pergunta"></h2>
+
+    <input type="text" id="respostaInput" placeholder="Digite sua resposta">
+
+    <button onclick="verificarResposta()">Responder</button>
+
+    <div class="mensagem" id="mensagem"></div>
+</div>
+
+<script>
+    // 🔑 TODAS AS ETAPAS ESTÃO AQUI
+    const etapas = [
+        {
+            pergunta: "Antes de ensinar, eu tentei compreender. Onde minhas perguntas ainda dormem em papel?",
+            resposta: "origem"
+        },
+        {
+            pergunta: "Toda origem aponta para o alto. Onde o pensamento encontra o céu antes de cair em palavras?",
+            resposta: "vertigem"
+        },
+        {
+            pergunta: "Nem tudo que cresce foi planejado. Algumas ideias nascem onde a raiz encontra o mundo.",
+            resposta: "tempo"
+        },
+        {
+            pergunta: "Depois de olhar para cima e para fora, o pensamento retorna para onde o corpo descansa.",
+            resposta: "silêncio"
+        },
+        {
+            pergunta: "Nem toda resposta cabe numa palavra. Onde o que importa foi guardado para você?",
+            resposta: "encontro"
+        }
+    ];
+
+    let etapaAtual = 0;
+
+    function mostrarEtapa() {
+        document.getElementById("pergunta").innerText = etapas[etapaAtual].pergunta;
+        document.getElementById("respostaInput").value = "";
+        document.getElementById("mensagem").innerText = "";
+    }
+
+    function verificarResposta() {
+        const respostaUsuario = document.getElementById("respostaInput").value.toLowerCase();
+        const respostaCorreta = etapas[etapaAtual].resposta.toLowerCase();
+        const mensagem = document.getElementById("mensagem");
+
+        if (respostaUsuario === respostaCorreta) {
+            etapaAtual++;
+
+            if (etapaAtual < etapas.length) {
+                mensagem.style.color = "green";
+                mensagem.innerText = "✔ Correto. O caminho continua...";
+                setTimeout(mostrarEtapa, 1200);
+            } else {
+                mensagem.style.color = "green";
+                mensagem.innerText = "🎁 Você chegou ao final. O presente te espera.";
+                document.getElementById("pergunta").innerText = "Parabéns.";
+                document.getElementById("respostaInput").style.display = "none";
+            }
+        } else {
+            mensagem.style.color = "red";
+            mensagem.innerText = "✖ Ainda não. Releia com calma.";
+        }
+    }
+
+    // Inicia a primeira etapa
+    mostrarEtapa();
+</script>
+
+</body>
+</html>
