@@ -1,127 +1,140 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CMD</title>
+    <meta charset="UTF-8">
+    <title>Terminal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-  * { box-sizing: border-box; }
+    <style>
+        * { box-sizing: border-box; }
 
-  body {
-    margin: 0;
-    background: #000;
-    height: 100vh;
-    display: grid;
-    place-items: center;
-    font-family: Consolas, "Courier New", monospace;
-    color: #00ff00;
-  }
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #0b0b0b;
+            color: #00ff88;
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+        }
 
-  .cmd {
-    width: min(92vw, 420px);
-    border: 1px solid #00ff00;
-    padding: 18px;
-    display: grid;
-    gap: 10px;
-  }
+        body { padding: 20px; }
 
-  #pergunta {
-    font-size: 13px;
-    line-height: 1.4;
-  }
+        .terminal { max-width: 800px; }
 
-  input, button {
-    width: 100%;
-    padding: 8px;
-    background: #000;
-    border: 1px solid #00ff00;
-    color: #00ff00;
-    font-family: inherit;
-    font-size: 13px;
-  }
+        .linha { margin-bottom: 8px; white-space: pre-wrap; }
 
-  button:hover {
-    background: #00ff00;
-    color: #000;
-    cursor: pointer;
-  }
+        .prompt { color: #00ff88; }
 
-  .mapa {
-    width: 100%;
-    border: 1px solid #00ff00;
-  }
-</style>
+        .input-linha {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-linha span { margin-right: 6px; }
+
+        input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #00ff88;
+            font-family: inherit;
+            font-size: inherit;
+            flex: 1;
+        }
+
+        input::placeholder { color: #007744; }
+
+        .mensagem { margin-top: 8px; }
+    </style>
 </head>
 <body>
 
-<div class="cmd">
-  <div id="pergunta"></div>
-  <input id="resposta" placeholder="digite o comando">
-  <button onclick="verificar()">executar</button>
+<div class="terminal" id="terminal">
+    <div class="linha">Microsoft Windows [Version 10.0.XXXX]</div>
+    <div class="linha">(c) Microsoft Corporation. Todos os direitos reservados.</div>
+    <div class="linha">&nbsp;</div>
+
+    <div class="linha" id="pergunta"></div>
+
+    <div class="input-linha">
+        <span class="prompt">C:\></span>
+        <input type="text" id="respostaInput" autofocus>
+    </div>
+
+    <div class="linha mensagem" id="mensagem"></div>
 </div>
 
 <script>
 const etapas = [
-  {
-    pergunta: "Onde minhas perguntas ainda dormem em papel?",
-    resposta: "caderno"
-  },
-  {
-    pergunta: "O que cresce sem pedir permissão?",
-    resposta: "raiz"
-  },
-  {
-    tipo: "mapa",
-    imagem: "mapa-mano.jpg",
-    texto: "Onde o X marca o lugar"
-  },
-  {
-    pergunta: "O que está ausente aqui?",
-    resposta: "silencio"
-  },
-  {
-    pergunta: "Onde o saber se torna encontro?",
-    resposta: "presente"
-  }
+    {
+        pergunta: "Onde minhas perguntas ainda dormem em papel?",
+        resposta: "origem"
+    },
+    {
+        pergunta: "Toda origem aponta para o alto.",
+        resposta: "vertigem"
+    },
+    {
+        tipo: "mapa",
+        imagem: "mapa-mano.jpg",
+        texto: "Aonde o X marca a resposta."
+    },
+    {
+        pergunta: "Depois de olhar para cima e para fora,\no pensamento retorna para onde o corpo descansa.",
+        resposta: "silencio"
+    },
+    {
+        pergunta: "Nem toda resposta cabe numa palavra.\nOnde o que importa foi guardado para você?",
+        resposta: "encontro"
+    }
 ];
 
 let etapaAtual = 0;
-const perguntaDiv = document.getElementById("pergunta");
-const input = document.getElementById("resposta");
-const botao = document.querySelector("button");
 
 function mostrarEtapa() {
-  const e = etapas[etapaAtual];
+    const perguntaDiv = document.getElementById("pergunta");
+    const etapa = etapas[etapaAtual];
 
-  if (e.tipo === "mapa") {
-    perguntaDiv.innerHTML = `
-      ${e.texto}<br><br>
-      <img src="${e.imagem}" class="mapa">
-    `;
-  } else {
-    perguntaDiv.textContent = e.pergunta;
-  }
+    if (etapa.tipo === "mapa") {
+        perguntaDiv.innerHTML = etapa.texto + "\n\n";
+        perguntaDiv.innerHTML += `<img src="${etapa.imagem}" style="max-width:100%; border:1px solid #00ff88; margin-top:10px;">`;
+    } else {
+        perguntaDiv.innerText = etapa.pergunta;
+    }
 
-  input.value = "";
+    document.getElementById("mensagem").innerText = "";
+    document.getElementById("respostaInput").value = "";
+    document.getElementById("respostaInput").focus();
 }
 
-function verificar() {
-  const valor = input.value.trim().toLowerCase();
-  const e = etapas[etapaAtual];
+document.getElementById("respostaInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") verificarResposta();
+});
 
-  if (e.tipo === "mapa" || valor === e.resposta) {
-    etapaAtual++;
-    if (etapaAtual >= etapas.length) {
-      perguntaDiv.innerHTML = "PROCESSO FINALIZADO.";
-      input.style.display = "none";
-      botao.style.display = "none";
+function verificarResposta() {
+    const input = document.getElementById("respostaInput");
+    const respostaUsuario = input.value.toLowerCase().trim();
+    const etapa = etapas[etapaAtual];
+    const respostaCorreta = etapa.resposta;
+    const mensagem = document.getElementById("mensagem");
+
+    if (etapa.tipo === "mapa" || respostaUsuario === respostaCorreta) {
+        etapaAtual++;
+
+        if (etapaAtual < etapas.length) {
+            mensagem.innerText = "Acesso concedido.";
+            setTimeout(mostrarEtapa, 800);
+        } else {
+            mensagem.innerText = "Processo concluído. O presente aguarda.";
+            input.style.display = "none";
+            document.querySelector(".prompt").innerText = "";
+        }
     } else {
-      mostrarEtapa();
+        mensagem.innerText = "Acesso negado.";
+        input.value = "";
     }
-  } else {
-    alert("COMANDO INVÁLIDO.");
-  }
 }
 
 mostrarEtapa();
