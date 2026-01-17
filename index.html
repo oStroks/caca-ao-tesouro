@@ -1,152 +1,127 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Terminal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caça ao Tesouro</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+  <style>
+    body {
+      margin: 0;
+      background: #0b0b0b;
+      color: #00ff88;
+      font-family: Consolas, monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background: #0b0b0b;
-            color: #00ff88;
-            font-family: "Courier New", monospace;
-            font-size: 14px;
-        }
+    .terminal {
+      border: 1px solid #00ff88;
+      padding: 20px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 0 15px #00ff88;
+      text-align: center;
+    }
 
-        body {
-            padding: 20px;
-        }
+    input, button {
+      width: 100%;
+      background: black;
+      color: #00ff88;
+      border: 1px solid #00ff88;
+      padding: 10px;
+      margin-top: 10px;
+      font-family: Consolas, monospace;
+    }
 
-        .terminal {
-            max-width: 800px;
-        }
+    button:hover {
+      background: #00ff88;
+      color: black;
+      cursor: pointer;
+    }
 
-        .linha {
-            margin-bottom: 8px;
-            white-space: pre-wrap;
-        }
-
-        .prompt {
-            color: #00ff88;
-        }
-
-        .input-linha {
-            display: flex;
-            align-items: center;
-        }
-
-        .input-linha span {
-            margin-right: 6px;
-        }
-
-        input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #00ff88;
-            font-family: inherit;
-            font-size: inherit;
-            flex: 1;
-        }
-
-        input::placeholder {
-            color: #007744;
-        }
-
-        .mensagem {
-            margin-top: 8px;
-        }
-    </style>
+    .mapa {
+      max-width: 100%;
+      margin: 15px 0;
+      border: 1px solid #00ff88;
+      box-shadow: 0 0 12px #00ff88;
+    }
+  </style>
 </head>
 <body>
 
-<div class="terminal" id="terminal">
-    <div class="linha">Microsoft Windows [Version 10.0.XXXX]</div>
-    <div class="linha">(c) Microsoft Corporation. Todos os direitos reservados.</div>
-    <div class="linha">&nbsp;</div>
+  <div class="terminal">
+    <div id="pergunta"></div>
+    <input type="text" id="resposta" placeholder="digite a resposta">
+    <button onclick="verificar()">enviar</button>
+  </div>
 
-    <div class="linha" id="pergunta"></div>
-
-    <div class="input-linha">
-        <span class="prompt">C:\></span>
-        <input type="text" id="respostaInput" autofocus>
-    </div>
-
-    <div class="linha mensagem" id="mensagem"></div>
-</div>
-
-<script>
+  <script>
     const etapas = [
-        {
-            pergunta: "Onde as perguntas ainda dormem em papel?",
-            resposta: "origem"
-        },
-        {
-            pergunta: "Toda origem aponta para o alto.",
-            resposta: "vertigem"
-        },
-        {
-            pergunta: "Algumas ideias nascem onde a raiz encontra o mundo.",
-            resposta: "tempo"
-        },
-        {
-            pergunta: "Onde o X marca o lugar",
-            resposta: "silencio"
-        },
-        {
-            pergunta: "Nem toda resposta cabe numa palavra.\nOnde o que importa foi guardado para você?",
-            resposta: "encontro"
-        }
+      {
+        pergunta: "Onde minhas perguntas ainda dormem em papel?",
+        resposta: "origem"
+      },
+      {
+        pergunta: "toda origem aponta para o alto",
+        resposta: "vertigem"
+      },
+      {
+        tipo: "mapa",
+        imagem: "mapa-mano.jpg",
+        texto: "Aonde o X marca a resposta"
+      },
+      {
+        pergunta: "Nem tudo que se vê é o que importa. O que falta aqui?",
+        resposta: "silencio"
+      },
+      {
+        pergunta: "Onde o saber se torna encontro?",
+        resposta: "presente"
+      }
     ];
 
     let etapaAtual = 0;
+    const perguntaDiv = document.getElementById("pergunta");
 
     function mostrarEtapa() {
-        document.getElementById("pergunta").innerText = etapas[etapaAtual].pergunta;
-        document.getElementById("mensagem").innerText = "";
-        document.getElementById("respostaInput").value = "";
-        document.getElementById("respostaInput").focus();
+      const etapa = etapas[etapaAtual];
+
+      if (etapa.tipo === "mapa") {
+        perguntaDiv.innerHTML = `
+          <img src="${etapa.imagem}" class="mapa">
+          <p>${etapa.texto}</p>
+        `;
+      } else {
+        perguntaDiv.textContent = etapa.pergunta;
+      }
+
+      document.getElementById("resposta").value = "";
     }
 
-    document.getElementById("respostaInput").addEventListener("keydown", function (e) {
-        if (e.key === "Enter") {
-            verificarResposta();
-        }
-    });
+    function verificar() {
+      const valor = document.getElementById("resposta").value.trim().toLowerCase();
+      const etapa = etapas[etapaAtual];
 
-    function verificarResposta() {
-        const input = document.getElementById("respostaInput");
-        const respostaUsuario = input.value.toLowerCase().trim();
-        const respostaCorreta = etapas[etapaAtual].resposta;
-        const mensagem = document.getElementById("mensagem");
+      if (etapa.tipo === "mapa" || valor === etapa.resposta) {
+        etapaAtual++;
 
-        if (respostaUsuario === respostaCorreta) {
-            etapaAtual++;
-
-            if (etapaAtual < etapas.length) {
-                mensagem.innerText = "Acesso concedido.";
-                setTimeout(mostrarEtapa, 800);
-            } else {
-                mensagem.innerText = "Processo concluído. O presente aguarda.";
-                input.style.display = "none";
-                document.querySelector(".prompt").innerText = "";
-            }
+        if (etapaAtual >= etapas.length) {
+          perguntaDiv.innerHTML = "<h2>Parabéns. O caminho termina, mas o sentido continua.</h2>";
+          document.getElementById("resposta").style.display = "none";
+          document.querySelector("button").style.display = "none";
         } else {
-            mensagem.innerText = "Acesso negado.";
-            input.value = "";
+          mostrarEtapa();
         }
+      } else {
+        alert("Resposta incorreta. Pense novamente.");
+      }
     }
 
     mostrarEtapa();
-</script>
+  </script>
 
 </body>
 </html>
