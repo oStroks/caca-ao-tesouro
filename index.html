@@ -1,127 +1,131 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Caça ao Tesouro</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CMD</title>
 
-  <style>
-    body {
-      margin: 0;
-      background: #0b0b0b;
-      color: #00ff88;
-      font-family: Consolas, monospace;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+<style>
+  * { box-sizing: border-box; }
 
-    .terminal {
-      border: 1px solid #00ff88;
-      padding: 20px;
-      width: 90%;
-      max-width: 420px;
-      box-shadow: 0 0 15px #00ff88;
-      text-align: center;
-    }
+  body {
+    margin: 0;
+    background: #000;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    font-family: Consolas, "Courier New", monospace;
+    color: #00ff00;
+  }
 
-    input, button {
-      width: 100%;
-      background: black;
-      color: #00ff88;
-      border: 1px solid #00ff88;
-      padding: 10px;
-      margin-top: 10px;
-      font-family: Consolas, monospace;
-    }
+  .cmd {
+    width: min(92vw, 420px);
+    border: 1px solid #00ff00;
+    padding: 18px;
+    display: grid;
+    gap: 10px;
+  }
 
-    button:hover {
-      background: #00ff88;
-      color: black;
-      cursor: pointer;
-    }
+  #pergunta {
+    font-size: 13px;
+    line-height: 1.4;
+  }
 
-    .mapa {
-      max-width: 100%;
-      margin: 15px 0;
-      border: 1px solid #00ff88;
-      box-shadow: 0 0 12px #00ff88;
-    }
-  </style>
+  input, button {
+    width: 100%;
+    padding: 8px;
+    background: #000;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    font-family: inherit;
+    font-size: 13px;
+  }
+
+  button:hover {
+    background: #00ff00;
+    color: #000;
+    cursor: pointer;
+  }
+
+  .mapa {
+    width: 100%;
+    border: 1px solid #00ff00;
+  }
+</style>
 </head>
 <body>
 
-  <div class="terminal">
-    <div id="pergunta"></div>
-    <input type="text" id="resposta" placeholder="digite a resposta">
-    <button onclick="verificar()">enviar</button>
-  </div>
+<div class="cmd">
+  <div id="pergunta"></div>
+  <input id="resposta" placeholder="digite o comando">
+  <button onclick="verificar()">executar</button>
+</div>
 
-  <script>
-    const etapas = [
-      {
-        pergunta: "Onde minhas perguntas ainda dormem em papel?",
-        resposta: "caderno"
-      },
-      {
-        pergunta: "O que cresce sem pedir permissão?",
-        resposta: "raiz"
-      },
-      {
-        tipo: "mapa",
-        imagem: "mapa-mano.jpg",
-        texto: "Observe o espaço. O essencial não se mostra."
-      },
-      {
-        pergunta: "Nem tudo que se vê é o que importa. O que falta aqui?",
-        resposta: "silencio"
-      },
-      {
-        pergunta: "Onde o saber se torna encontro?",
-        resposta: "presente"
-      }
-    ];
+<script>
+const etapas = [
+  {
+    pergunta: "Onde minhas perguntas ainda dormem em papel?",
+    resposta: "caderno"
+  },
+  {
+    pergunta: "O que cresce sem pedir permissão?",
+    resposta: "raiz"
+  },
+  {
+    tipo: "mapa",
+    imagem: "mapa-mano.jpg",
+    texto: "Onde o X marca o lugar"
+  },
+  {
+    pergunta: "O que está ausente aqui?",
+    resposta: "silencio"
+  },
+  {
+    pergunta: "Onde o saber se torna encontro?",
+    resposta: "presente"
+  }
+];
 
-    let etapaAtual = 0;
-    const perguntaDiv = document.getElementById("pergunta");
+let etapaAtual = 0;
+const perguntaDiv = document.getElementById("pergunta");
+const input = document.getElementById("resposta");
+const botao = document.querySelector("button");
 
-    function mostrarEtapa() {
-      const etapa = etapas[etapaAtual];
+function mostrarEtapa() {
+  const e = etapas[etapaAtual];
 
-      if (etapa.tipo === "mapa") {
-        perguntaDiv.innerHTML = `
-          <img src="${etapa.imagem}" class="mapa">
-          <p>${etapa.texto}</p>
-        `;
-      } else {
-        perguntaDiv.textContent = etapa.pergunta;
-      }
+  if (e.tipo === "mapa") {
+    perguntaDiv.innerHTML = `
+      ${e.texto}<br><br>
+      <img src="${e.imagem}" class="mapa">
+    `;
+  } else {
+    perguntaDiv.textContent = e.pergunta;
+  }
 
-      document.getElementById("resposta").value = "";
+  input.value = "";
+}
+
+function verificar() {
+  const valor = input.value.trim().toLowerCase();
+  const e = etapas[etapaAtual];
+
+  if (e.tipo === "mapa" || valor === e.resposta) {
+    etapaAtual++;
+    if (etapaAtual >= etapas.length) {
+      perguntaDiv.innerHTML = "PROCESSO FINALIZADO.";
+      input.style.display = "none";
+      botao.style.display = "none";
+    } else {
+      mostrarEtapa();
     }
+  } else {
+    alert("COMANDO INVÁLIDO.");
+  }
+}
 
-    function verificar() {
-      const valor = document.getElementById("resposta").value.trim().toLowerCase();
-      const etapa = etapas[etapaAtual];
-
-      if (etapa.tipo === "mapa" || valor === etapa.resposta) {
-        etapaAtual++;
-
-        if (etapaAtual >= etapas.length) {
-          perguntaDiv.innerHTML = "<h2>Parabéns. O caminho termina, mas o sentido continua.</h2>";
-          document.getElementById("resposta").style.display = "none";
-          document.querySelector("button").style.display = "none";
-        } else {
-          mostrarEtapa();
-        }
-      } else {
-        alert("Resposta incorreta. Pense novamente.");
-      }
-    }
-
-    mostrarEtapa();
-  </script>
+mostrarEtapa();
+</script>
 
 </body>
 </html>
