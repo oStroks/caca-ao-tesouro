@@ -73,22 +73,23 @@ const etapas = [
         resposta: "origem"
     },
     {
-        pergunta: "Toda origem aponta para o alto.",
+        pergunta: "Toda origem aponta para o alto. \nOnde toma seu café?" ,
         resposta: "vertigem"
     },
     {
-        tipo: "mapa",
-        imagem: "mapa-mano.jpg",
-        texto: "Aonde o X marca a resposta."
-    },
+    tipo: "mapa",
+    imagem: "mapa-mano.jpg",
+    texto: "Onde X marca a resposta",
+    resposta: "quadro"
+},
     {
-        pergunta: "Depois de olhar para cima e para fora,\no pensamento retorna para onde o corpo descansa.",
+        pergunta: "Ache chave antiga que ainda abre presentes novos",
         resposta: "silencio"
     },
     {
-        pergunta: "Nem toda resposta cabe numa palavra.\nOnde o que importa foi guardado para você?",
-        resposta: "encontro"
-    }
+        pergunta: "O que parece morto ainda pode aquecer.\nOnde o frio encontra abrigo?",
+        resposta: "fogo"
+    },
 ];
 
 let etapaAtual = 0;
@@ -127,7 +128,7 @@ function verificarResposta() {
             mensagem.innerText = "Acesso concedido.";
             setTimeout(mostrarEtapa, 800);
         } else {
-            mensagem.innerText = "Processo concluído. O presente aguarda.";
+            mensagem.innerText = "MEUS PARABENS!!! O PRESENTE AGUARDA DENTRO DO MEU ARMARIO";
             input.style.display = "none";
             document.querySelector(".prompt").innerText = "";
         }
