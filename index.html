@@ -121,7 +121,7 @@ function verificarResposta() {
     const respostaCorreta = etapa.resposta;
     const mensagem = document.getElementById("mensagem");
 
-    if (etapa.tipo === "mapa" || respostaUsuario === respostaCorreta) {
+    if (respostaUsuario === respostaCorreta) {
         etapaAtual++;
 
         if (etapaAtual < etapas.length) {
